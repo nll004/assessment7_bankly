@@ -3,7 +3,7 @@ const hours = ['Twelve', 'One', 'Two', 'Three', 'Four',
 
 const minutes1 = ['Oh', null, 'Twenty', 'Thirty', 'Forty', 'Fifty']
 
-const minutes2 = [null, 'One', 'Two', 'Three', 'Four', 'Five', 'Six',
+const minutes2 = ['clock', 'One', 'Two', 'Three', 'Four', 'Five', 'Six',
                     'Seven', 'Eight', 'Nine', 'Ten', 'Eleven',
                     'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
                     'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
@@ -20,7 +20,7 @@ function convertTimeIntoWords(timeString){
     let min = time[1]; // string value
     let timePeriod = 'AM';
 
-    if (hr > 12) {
+    if (hr >= 12) {
         timePeriod = "PM";
         hr = hr - 12;
     };
@@ -34,8 +34,8 @@ function convertTimeIntoWords(timeString){
         let min2 = parseInt(min[1]);
         min = parseInt(min[0])
         console.log(`${hours[hr]} ${minutes1[min]} ${minutes2[min2]} ${timePeriod}`)
-        return `${hours[hr]} ${minutes2[min]} ${timePeriod}`
+        return `${hours[hr]} ${minutes1[min]} ${minutes2[min2]} ${timePeriod}`
     }
 }
 
-module.exports = convertTimeIntoWords, hours, minutes1, minutes2
+module.exports = convertTimeIntoWords
