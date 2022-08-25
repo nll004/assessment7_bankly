@@ -110,14 +110,16 @@ class User {
       [username]
     );
 
-    // a failed query still returns an empty result object
-    // this should be written as shown below:
-    // if (result.rows.length === 0){
-    //   throw new ExpressError('User not found', 404)
-    // }
+
+    // this handles an invalid user
+    if (result.rows.length === 0){
+      throw new ExpressError('User not found', 404)
+    }
 
     const user = result.rows[0];
 
+    // this way of handling an invalid user does not work
+    // a failed query still returns an empty result object
     if (!user) {
       new ExpressError('No such user', 404);
     }
@@ -142,6 +144,10 @@ class User {
     );
 
     const result = await db.query(query, values);
+
+    if (result.rows.length === 0){
+      throw new ExpressError('User not found', 404)
+    }
 
     const user = result.rows[0];
 

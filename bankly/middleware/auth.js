@@ -48,9 +48,11 @@ function authUser(req, res, next) {
   try {
     const token = req.body._token || req.query._token;
     if (token) {
+      // function needs to include token verification before
+      // processing the payload and using the data as listed below
+      jwt.verify(token, SECRET_KEY);
+
       let payload = jwt.decode(token);
-      // function needs to include token verification listed below
-      // jwt.verify(token, SECRET_KEY);
       req.curr_username = payload.username;
       req.curr_admin = payload.admin;
     }

@@ -100,7 +100,15 @@ describe("GET /users", function() {
     expect(response.statusCode).toBe(401);
   });
 
-  test("should list all users", async function() {
+  // added test to confirm valid user logged in before accessing
+  test('should deny access if token not valid', async function(){
+    const response = await request(app)
+      .get('/users')
+      .send({ _token: "invalid_token" });
+    expect(response.statusCode).toBe(401);
+  })
+
+  test("should list all users if valid token", async function() {
     const response = await request(app)
       .get("/users")
       .send({ _token: tokens.u1 });
@@ -115,7 +123,15 @@ describe("GET /users/[username]", function() {
     expect(response.statusCode).toBe(401);
   });
 
-  test("should return data on u1", async function() {
+  // added test to confirm valid user logged in before accessing
+  test('should deny access if token not valid', async function(){
+    const response = await request(app)
+      .get('/users')
+      .send({ _token: "invalid_token" });
+    expect(response.statusCode).toBe(401);
+  })
+
+  test("should return data on u1 if valid token", async function() {
     const response = await request(app)
       .get("/users/u1")
       .send({ _token: tokens.u1 });
