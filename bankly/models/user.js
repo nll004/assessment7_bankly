@@ -180,7 +180,7 @@ class User {
     // if (!user) {
     //   throw new ExpressError('No such user', 404);
     // }
-    return user;
+    // return user;
   }
 }
 

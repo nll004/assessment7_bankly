@@ -21,7 +21,8 @@ router.get('/', authUser, requireLogin, async function(req, res, next) {
   try {
     let users = await User.getAll();
     return res.json({ users });
-  } catch (err) {
+  }
+  catch (err) {
     return next(err);
   }
 }); // end
@@ -41,7 +42,8 @@ router.get('/:username', authUser, requireLogin, async function(req,res,next) {
   try {
     let user = await User.get(req.params.username);
     return res.json({ user });
-  } catch (err) {
+  }
+  catch (err) {
     return next(err);
   }
 });
@@ -61,11 +63,7 @@ router.get('/:username', authUser, requireLogin, async function(req,res,next) {
  *
  */
 
-router.patch('/:username', authUser, requireLogin, async function(
-  req,
-  res,
-  next
-) {
+router.patch('/:username', authUser, requireLogin, async function(req, res, next) {
   try {
     const result = jsonschema.validate(req.body, patchSchema);
 
@@ -107,7 +105,7 @@ router.patch('/:username', authUser, requireLogin, async function(
 
 router.delete('/:username', authUser, requireAdmin, async function(req, res, next) {
   try {
-    User.delete(req.params.username);
+    await User.delete(req.params.username);
     return res.json({ message: 'deleted' });
   }
   catch (err) {

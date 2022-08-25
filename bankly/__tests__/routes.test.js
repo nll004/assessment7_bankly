@@ -280,14 +280,12 @@ describe("DELETE /users/[username]", function() {
     expect(response.body).toEqual({ message: "deleted" });
   });
 
-  // test("should return 404 status if user not found", async function() {
-  //   const response = await request(app)
-  //     .delete("/users/not-a-user")
-  //     .send({ _token: tokens.u3 }); // u3 is admin
-
-  //   console.log(response.rows)
-  //   expect(response.error).toBe(404);
-  // });
+  test("should return 404 status if user not found", async function() {
+    const response = await request(app)
+      .delete("/users/not-a-user")
+      .send({ _token: tokens.u3 }); // u3 is admin
+    expect(response.statusCode).toBe(404);
+  });
 });
 
 afterEach(async function() {

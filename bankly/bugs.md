@@ -6,6 +6,8 @@
 
 4. User.get(username) function does not handle correctly for a user not being found.
 
-5. User.delete(username) function does not handle correctly for a user not being found.
+5. User.delete(username) function does not handle correctly for a user not being found. Await needed to be added to the function as well as it was timing out and failing tests.
 
 6. User cannot edit their own information becuase all edits required admin. I removed admin requirement and set a condtional that if the user tries to alter admin status an error is thrown.
+
+7. Authentication method was not being awaited correctly and causing issues when logging in and authorization.
