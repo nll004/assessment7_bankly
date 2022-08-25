@@ -21,24 +21,15 @@
         "password": {
             "type": "string",
             "minLength": 8,
-            "title": "The password Schema",
-            "examples": [
-                "password123"
-            ]
+            "title": "The password Schema"
         },
         "first_name": {
             "type": "string",
-            "title": "The first_name Schema",
-            "examples": [
-                "Nate"
-            ]
+            "title": "The first_name Schema"
         },
         "last_name": {
             "type": "string",
-            "title": "The last_name Schema",
-            "examples": [
-                "Diaz"
-            ]
+            "title": "The last_name Schema"
         },
         "email": {
             "type": "string",
@@ -53,16 +44,8 @@
             "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}",
             "title": "The phone Schema",
             "examples": [
-                "31512451462"
+                "(315)124-5146", "543-1874"
             ]
         }
-    },
-    "examples": [{
-        "username": "nll0394",
-        "password": "password",
-        "first_name": "Nate",
-        "last_name": "Diaz",
-        "email": "email@gmail.com",
-        "phone": "31512451462"
-    }]
+    }
 }

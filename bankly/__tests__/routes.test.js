@@ -228,7 +228,23 @@ describe("PATCH /users/[username]", function() {
     });
   });
 
-  test("should disallowing patching not-allowed-fields", async function() {
+  test("should patch data if user makes changes to self", async function() {
+    const response = await request(app)
+      .patch("/users/u1")
+      .send({ _token: tokens.u1, first_name: "new-fn1" }); // u3 is admin
+    expect(response.statusCode).toBe(200);
+    expect(response.body.user).toEqual({
+      username: "u1",
+      first_name: "new-fn1",
+      last_name: "ln1",
+      email: "email1",
+      phone: "phone1",
+      admin: false,
+      password: expect.any(String)
+    });
+  });
+
+  test("should disallow user setting themselves to admin", async function() {
     const response = await request(app)
       .patch("/users/u1")
       .send({ _token: tokens.u1, admin: true });
@@ -266,8 +282,10 @@ describe("DELETE /users/[username]", function() {
 
   // test("should return 404 status if user not found", async function() {
   //   const response = await request(app)
-  //     .delete("/users/u2")
+  //     .delete("/users/not-a-user")
   //     .send({ _token: tokens.u3 }); // u3 is admin
+
+  //   console.log(response.rows)
   //   expect(response.error).toBe(404);
   // });
 });

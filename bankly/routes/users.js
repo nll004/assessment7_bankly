@@ -3,6 +3,8 @@
 const User = require('../models/user');
 const express = require('express');
 const router = new express.Router();
+const jsonschema = require('jsonschema');
+const patchSchema = require('../schemas/userUpdateSchema.json');
 const ExpressError = require('../helpers/expressError');
 const { authUser, requireLogin, requireAdmin } = require('../middleware/auth');
 
@@ -59,14 +61,26 @@ router.get('/:username', authUser, requireLogin, async function(req,res,next) {
  *
  */
 
-router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
+router.patch('/:username', authUser, requireLogin, async function(
   req,
   res,
   next
 ) {
   try {
+    const result = jsonschema.validate(req.body, patchSchema);
+
+    if(!result.valid){
+      let listOfErrors = result.errors.map(error => error.stack);
+      let error = new ExpressError(listOfErrors, 400);
+      return next(error);
+    }
+
     if (!req.curr_admin && req.curr_username !== req.params.username) {
       throw new ExpressError('Only that user or admin can edit a user.', 401);
+    }
+
+    if (!req.curr_admin && req.body.hasOwnProperty("admin")){
+      throw new ExpressError('Changes to admin status requires an admin', 401)
     }
 
     // get fields to change; remove token so we don't try to change it
@@ -75,7 +89,8 @@ router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
 
     let user = await User.update(req.params.username, fields);
     return res.json({ user });
-  } catch (err) {
+  }
+  catch (err) {
     return next(err);
   }
 }); // end
@@ -92,10 +107,7 @@ router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
 
 router.delete('/:username', authUser, requireAdmin, async function(req, res, next) {
   try {
-    // console.log('Delete route username param?', req.params.username)
-
     User.delete(req.params.username);
-
     return res.json({ message: 'deleted' });
   }
   catch (err) {

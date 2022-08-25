@@ -7,3 +7,5 @@
 4. User.get(username) function does not handle correctly for a user not being found.
 
 5. User.delete(username) function does not handle correctly for a user not being found.
+
+6. User cannot edit their own information becuase all edits required admin. I removed admin requirement and set a condtional that if the user tries to alter admin status an error is thrown.

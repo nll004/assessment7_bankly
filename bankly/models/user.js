@@ -164,14 +164,11 @@ class User {
    **/
 
   static async delete(username) {
-    // console.log('Delete function', username)
-
     const result = await db.query(
       'DELETE FROM users WHERE username = $1 RETURNING username',
       [username]
     );
-    // console.log('Delete result', result.rows)
-
+      console.log(result.rows)
     // a failed query still returns an empty result array
     // this should be written as shown below:
     if (result.rows.length === 0){
@@ -183,7 +180,7 @@ class User {
     // if (!user) {
     //   throw new ExpressError('No such user', 404);
     // }
-    // return true;
+    return user;
   }
 }
 

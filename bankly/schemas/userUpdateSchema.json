@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "_token"
+    ],
+    "properties": {
+        "password": {
+            "type": "string",
+            "minLength": 8,
+            "title": "The password Schema"
+        },
+        "first_name": {
+            "type": "string",
+            "title": "The first_name Schema"
+        },
+        "last_name": {
+            "type": "string",
+            "title": "The last_name Schema"
+        },
+        "email": {
+            "type": "string",
+            "format": "email",
+            "title": "The email Schema",
+            "examples": [
+                "email@gmail.com"
+            ]
+        },
+        "phone": {
+            "type": "string",
+            "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}",
+            "title": "The phone Schema",
+            "examples": [
+                "(315)124-5146", "543-1874"
+            ],
+        "_token": {
+            "type": "string",
+            "title": "The _token Schema"
+        }
+    }}
+}
