@@ -35,11 +35,7 @@ router.get('/', authUser, requireLogin, async function(req, res, next) {
  *
  */
 
-router.get('/:username', authUser, requireLogin, async function(
-  req,
-  res,
-  next
-) {
+router.get('/:username', authUser, requireLogin, async function(req,res,next) {
   try {
     let user = await User.get(req.params.username);
     return res.json({ user });
@@ -94,15 +90,15 @@ router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
  * If user cannot be found, return a 404 err.
  */
 
-router.delete('/:username', authUser, requireAdmin, async function(
-  req,
-  res,
-  next
-) {
+router.delete('/:username', authUser, requireAdmin, async function(req, res, next) {
   try {
+    // console.log('Delete route username param?', req.params.username)
+
     User.delete(req.params.username);
+
     return res.json({ message: 'deleted' });
-  } catch (err) {
+  }
+  catch (err) {
     return next(err);
   }
 }); // end

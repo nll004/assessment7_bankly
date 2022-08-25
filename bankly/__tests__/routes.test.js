@@ -75,6 +75,8 @@ describe("POST /auth/register", function() {
   });
 });
 
+// NEED TO TEST /AUTH/REGISTER FOR ERRORS WHEN MISSING JSON DATA OR INVALID SCHEMA
+
 describe("POST /auth/login", function() {
   test("should allow a correct username/password to log in", async function() {
     const response = await request(app)
@@ -126,6 +128,14 @@ describe("GET /users/[username]", function() {
       phone: "phone1"
     });
   });
+
+  // added test to check for error handling of null user
+  test('should throw a 404 error if user is not found', async function(){
+    const response = await request(app)
+      .get('/users/not-a-user')
+      .send({ _token: tokens.u1 });
+    expect(response.statusCode).toBe(404);
+  })
 });
 
 describe("PATCH /users/[username]", function() {
@@ -185,13 +195,20 @@ describe("DELETE /users/[username]", function() {
     expect(response.statusCode).toBe(401);
   });
 
-  test("should allow if admin", async function() {
+  test("should allow delete if admin", async function() {
     const response = await request(app)
-      .delete("/users/u1")
+      .delete("/users/u2")
       .send({ _token: tokens.u3 }); // u3 is admin
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ message: "deleted" });
   });
+
+  // test("should return 404 status if user not found", async function() {
+    // const response = await request(app)
+      // .delete("/users/u2")
+      // .send({ _token: tokens.u3 }); // u3 is admin
+    // expect(response.error).toBe(404);
+  // });
 });
 
 afterEach(async function() {

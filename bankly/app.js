@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const ExpressError = require("./helpers/expressError");
 
-
 app.use(express.json());
 
 const authRoutes = require('./routes/auth');

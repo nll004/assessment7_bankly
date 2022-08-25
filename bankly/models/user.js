@@ -10,8 +10,8 @@ class User {
 
   static async register({username, password, first_name, last_name, email, phone}) {
     const duplicateCheck = await db.query(
-      `SELECT username 
-        FROM users 
+      `SELECT username
+        FROM users
         WHERE username = $1`,
       [username]
     );
@@ -26,9 +26,9 @@ class User {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
     const result = await db.query(
-      `INSERT INTO users 
-          (username, password, first_name, last_name, email, phone) 
-        VALUES ($1, $2, $3, $4, $5, $6) 
+      `INSERT INTO users
+          (username, password, first_name, last_name, email, phone)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING username, password, first_name, last_name, email, phone`,
       [
         username,
@@ -59,7 +59,7 @@ class User {
                 email,
                 phone,
                 admin
-            FROM users 
+            FROM users
             WHERE username = $1`,
       [username]
     );
@@ -86,7 +86,7 @@ class User {
                 last_name,
                 email,
                 phone
-            FROM users 
+            FROM users
             ORDER BY username`
     );
     return result.rows;
@@ -109,6 +109,12 @@ class User {
          WHERE username = $1`,
       [username]
     );
+
+    // a failed query still returns an empty result object
+    // this should be written as shown below:
+    // if (result.rows.length === 0){
+    //   throw new ExpressError('User not found', 404)
+    // }
 
     const user = result.rows[0];
 
@@ -136,12 +142,12 @@ class User {
     );
 
     const result = await db.query(query, values);
+
     const user = result.rows[0];
 
     if (!user) {
       throw new ExpressError('No such user', 404);
     }
-
     return user;
   }
 
@@ -152,17 +158,26 @@ class User {
    **/
 
   static async delete(username) {
+    // console.log('Delete function', username)
+
     const result = await db.query(
       'DELETE FROM users WHERE username = $1 RETURNING username',
       [username]
     );
-    const user = result.rows[0];
+    // console.log('Delete result', result.rows)
 
-    if (!user) {
-      throw new ExpressError('No such user', 404);
+    // a failed query still returns an empty result array
+    // this should be written as shown below:
+    if (result.rows.length === 0){
+      throw new ExpressError('User not found', 404)
     }
 
-    return true;
+    const user = result.rows[0];
+
+    // if (!user) {
+    //   throw new ExpressError('No such user', 404);
+    // }
+    // return true;
   }
 }
 
