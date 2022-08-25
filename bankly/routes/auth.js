@@ -4,9 +4,11 @@ const User = require('../models/user');
 const express = require('express');
 const jsonschema = require('jsonschema');
 const regSchema = require('../schemas/userRegSchema.json');
+const loginSchema = require('../schemas/userLoginSchema.json');
 const router = express.Router();
 const createTokenForUser = require('../helpers/createToken');
 const ExpressError = require('../helpers/expressError');
+const { json } = require('express');
 
 
 /** Register user; return token.
@@ -49,10 +51,19 @@ router.post('/register', async function(req, res, next) {
 
 router.post('/login', async function(req, res, next) {
   try {
-    const { username, password } = req.body;
-    let user = User.authenticate(username, password);
-    const token = createTokenForUser(username, user.admin);
-    return res.json({ token });
+    const result = jsonschema.validate(req.body, loginSchema);
+
+    if (!result.valid){
+      let listOfErrors = result.errors.map(error => error.stack);
+      let error = new ExpressError(listOfErrors, 400);
+      return next(error);
+    }
+    else {
+      const { username, password } = req.body;
+      let user = User.authenticate(username, password);
+      const token = createTokenForUser(username, user.admin);
+      return res.json({ token });
+    }
   } catch (err) {
     return next(err);
   }

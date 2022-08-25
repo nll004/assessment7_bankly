@@ -86,7 +86,7 @@ describe("POST /auth/register", function() {
     expect(response.statusCode).toBe(400);
   })
 
-  test('should throw an error if email string is invalid structure', async function(){
+  test('should throw an error if email string is invalid format', async function(){
     const response = await request(app).post('/auth/register')
       .send({
         username: "user23584",
@@ -128,6 +128,15 @@ describe("POST /auth/login", function() {
     expect(username).toBe("u1");
     expect(admin).toBe(false);
   });
+
+  test('should throw error if username/password is missing', async function() {
+    const response = await request(app)
+      .post('/auth/login')
+      .send({
+        username: "u1"
+      })
+    expect(response.statusCode).toBe(400);
+  })
 });
 
 describe("GET /users", function() {
@@ -256,10 +265,10 @@ describe("DELETE /users/[username]", function() {
   });
 
   // test("should return 404 status if user not found", async function() {
-    // const response = await request(app)
-      // .delete("/users/u2")
-      // .send({ _token: tokens.u3 }); // u3 is admin
-    // expect(response.error).toBe(404);
+  //   const response = await request(app)
+  //     .delete("/users/u2")
+  //     .send({ _token: tokens.u3 }); // u3 is admin
+  //   expect(response.error).toBe(404);
   // });
 });
 
