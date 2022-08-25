@@ -9,7 +9,7 @@ describe('Testing convertTimeIntoWords function', () => {
     expect(typeof convertTimeIntoWords('02:27')).toBe('string');
   })
 
-  test('It converts correctly', () => {
+  test('Function returns correct words', () => {
     expect(convertTimeIntoWords('04:36')).toEqual('Four Thirty Six AM');
     expect(convertTimeIntoWords('23:59')).toEqual('Eleven Fifty Nine PM');
     expect(convertTimeIntoWords('12:00')).toEqual('Twelve Oh clock PM');
