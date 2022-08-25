@@ -2,8 +2,11 @@
 
 const User = require('../models/user');
 const express = require('express');
+const jsonschema = require('jsonschema');
+const regSchema = require('../schemas/userRegSchema.json');
 const router = express.Router();
 const createTokenForUser = require('../helpers/createToken');
+const ExpressError = require('../helpers/expressError');
 
 
 /** Register user; return token.
@@ -16,10 +19,19 @@ const createTokenForUser = require('../helpers/createToken');
 
 router.post('/register', async function(req, res, next) {
   try {
-    const { username, password, first_name, last_name, email, phone } = req.body;
-    let user = await User.register({username, password, first_name, last_name, email, phone});
-    const token = createTokenForUser(username, user.admin);
-    return res.status(201).json({ token });
+    const result = jsonschema.validate(req.body, regSchema);
+
+    if(!result.valid){
+      let listOfErrors = result.errors.map(error => error.stack);
+      let error = new ExpressError(listOfErrors, 400);
+      return next(error);
+    }
+    else{
+      const { username, password, first_name, last_name, email, phone } = req.body;
+      let user = await User.register({username, password, first_name, last_name, email, phone});
+      const token = createTokenForUser(username, user.admin);
+      return res.status(201).json({ token });
+    }
   } catch (err) {
     return next(err);
   }

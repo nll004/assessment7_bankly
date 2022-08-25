@@ -111,7 +111,7 @@ class User {
     );
 
 
-    // this handles an invalid user
+    // this handles for an invalid user
     if (result.rows.length === 0){
       throw new ExpressError('User not found', 404)
     }

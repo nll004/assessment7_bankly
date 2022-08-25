@@ -46,7 +46,7 @@ describe("POST /auth/register", function() {
         first_name: "new_first",
         last_name: "new_last",
         email: "new@newuser.com",
-        phone: "1233211221"
+        phone: "(123)321-1221"
       });
     expect(response.statusCode).toBe(201);
     expect(response.body).toEqual({ token: expect.any(String) });
@@ -61,11 +61,11 @@ describe("POST /auth/register", function() {
       .post("/auth/register")
       .send({
         username: "u1",
-        password: "pwd1",
+        password: "pwd1q4qetqt",
         first_name: "new_first",
         last_name: "new_last",
         email: "new@newuser.com",
-        phone: "1233211221"
+        phone: "(123)321-1221"
       });
     expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
@@ -73,9 +73,45 @@ describe("POST /auth/register", function() {
       message: `There already exists a user with username 'u1'`
     });
   });
-});
 
-// NEED TO TEST /AUTH/REGISTER FOR ERRORS WHEN MISSING JSON DATA OR INVALID SCHEMA
+  test('should throw an error if any missing fields when registering', async function(){
+    const response = await request(app).post('/auth/register')
+      .send({
+        password: "pwd136252",
+        first_name: "new_first",
+        last_name: "new_last",
+        email: "new@newuser.com",
+        phone: "(123)321-2122"
+      })
+    expect(response.statusCode).toBe(400);
+  })
+
+  test('should throw an error if email string is invalid structure', async function(){
+    const response = await request(app).post('/auth/register')
+      .send({
+        username: "user23584",
+        password: "pwd136252",
+        first_name: "new_first",
+        last_name: "new_last",
+        email: "fake@email",
+        phone: "(123)321-2122"
+      })
+    expect(response.statusCode).toBe(400);
+  })
+
+  test('should throw an error if phone number is not in correct format', async function(){
+    // phone format should be (123)456-7890 or 456-7890
+    const response = await request(app).post('/auth/register')
+      .send({
+        password: "pwd136252",
+        first_name: "new_first",
+        last_name: "new_last",
+        email: "new@newuser.com",
+        phone: "1233212122"
+      })
+    expect(response.statusCode).toBe(400);
+  })
+});
 
 describe("POST /auth/login", function() {
   test("should allow a correct username/password to log in", async function() {
